@@ -4,7 +4,7 @@ Hello there!
 
 This is the Fate/GO Card Creator.
 
-With this script, you can make some nice cards with your very own servants with their respective skills, level and NP level. If you have any grailed Servants, you can also add their IDs into a text layer to insert the exact level they're in.
+With this script, you can make some nice cards with your very own servants (up to Kukulcan) with their respective skills, level and NP level. If you have any grailed Servants, you can also add their IDs into a text layer to insert the exact level they're in.
 
 It's also important to remember that you have to place the .jsx file right into the Adobe Photoshop 2021\Presets\Scripts folder.
 
