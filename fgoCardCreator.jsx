@@ -449,7 +449,6 @@ if(file[0]){
         skill = prompt("Insert Skill " + k + " Level.");
         skillLayer = editable.getByName("SkillTXT " + k); 
         if (skill != null && skill != "") {
-            alert(skill != null && skill != "")
             if (skill == '10' && skillLayer.textItem.contents != '10') {
             skillLayer.textItem.size = 150;
             skillLayer.translate(0, -11.23);
