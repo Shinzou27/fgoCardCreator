@@ -357,21 +357,25 @@ var matrix =   [["1", "Mash Kyrielight", "SR"],
             ["364", "Iyo", "SR"],
             ["365", "Huyan Zhuo", "SSR"],
             ["366", "Huang Feihu", "SR"],
-            ["367", "9 Tattoo Dragon Eliza", "SR"]];
+            ["367", "9 Tattoo Dragon Eliza", "SR"],
+            ["368", "Britomart", "SSR"],
+            ["369", "Grigori Rasputin", "SSR"],
+            ["370", "Nitocris (Alter)", "SSR"],
+            ["371", "Tezcatlipoca", "SSR"],
+            ["372", "Tlaloc", "SR"],
+            ["373", "Kukulcan", "SSR"]];
 var matrixLines = matrix.length;
-
-app.activeDocument.activeLayer = app.activeDocument.layers.getByName("Starting Point");
-file = app.openDialog();
+var doc = app.activeDocument;
+doc.activeLayer = doc.layers.getByName("Starting Point");
+var file = app.openDialog();
 var grailedServants = createGrailedServantsArray();
 
 var width = 614;
 var height = 869;
 
 if(file[0]){ 
-    doc = app.activeDocument;
     doc.layers.getByName("Servant FA").name = "Prev Servant FA";
     app.load(file[0]);
-
     for (i = 0; i < matrixLines; i++) {
         if (file[0].name == (matrix[i][0] + ".png")) {
             var servantName = matrix[i][1];
@@ -381,7 +385,7 @@ if(file[0]){
         }
     }
 
-    backFile = app.activeDocument;
+    var backFile = app.activeDocument;
     backFile.resizeImage(width,height);
     backFile.selection.selectAll();
     backFile.selection.copy();
@@ -394,8 +398,8 @@ if(file[0]){
     doc.layers.getByName("Prev Servant FA").remove();
 
     for (i = 0; i < 3; i++) {
-        thisSkillName = "Skill " + (i + 1);       
-        skillImg = app.openDialog();
+        var thisSkillName = "Skill " + (i + 1);       
+        var skillImg = app.openDialog();
         width = 164;
         height = 164;
         if (skillImg[0]) {
@@ -408,7 +412,7 @@ if(file[0]){
             backFile.close(SaveOptions.DONOTSAVECHANGES);
             doc = app.activeDocument;
             doc.paste();
-            skillImgDoc = doc.activeLayer;
+            var skillImgDoc = doc.activeLayer;
             skillImgDoc.translate(120+360*i, 60);
             skillImgDoc.name = thisSkillName;
         }
@@ -444,62 +448,54 @@ if(file[0]){
     for (k = 1; k <= 3; k++) {
         skill = prompt("Insert Skill " + k + " Level.");
         skillLayer = editable.getByName("SkillTXT " + k); 
-        if (skill == '10' && skillLayer.textItem.contents != '10') {
+        if (skill != null && skill != "") {
+            alert(skill != null && skill != "")
+            if (skill == '10' && skillLayer.textItem.contents != '10') {
             skillLayer.textItem.size = 150;
             skillLayer.translate(0, -11.23);
-        }   else if (skill != '10' && skillLayer.textItem.contents == '10') {
+            }  
+            else if (skill != '10' && skillLayer.textItem.contents == '10') {
                 skillLayer.textItem.size = 189;
                 skillLayer.translate(0, 11.23);
             }
-        skillLayer.textItem.contents = skill;
+            skillLayer.textItem.contents = skill;
+        }
     }
-    
+    var svtStats = [
+        {
+            "color": colorBronze,
+            "level": 'Level: 60',
+            "np": 'NP5'
+        },
+        {
+            "color": colorBronze,
+            "level": 'Level: 65',
+            "np": 'NP5'
+        },
+        {
+            "color": colorSilver,
+            "level": 'Level: 70',
+            "np": 'NP5'
+        },
+        {
+            "color": colorGold,
+            "level": 'Level: 80',
+            "np": 'NP1'
+        },
+        {
+            "color": colorGold,
+            "level": 'Level: 90',
+            "np": 'NP1'
+        },
+        {
+            "rarities": ["C", "UC", "R", "SR", "SSR"]
+        }
+    ]
 
     var rarityColor;
-    var npLevel;
     var servantLevel;
-
-    if (servantRarity == 'C' || servantRarity == 'UC') {
-        rarityColor = colorBronze;
-        npLevel = 'NP5';
-        if (verifyGrailedServant(servantID)) {
-            levelPrompt = prompt("Insert Servant Level.");
-            servantLevel = "Level: " + levelPrompt;
-        }
-        else if (servantRarity == 'C') {
-            servantLevel = 'Level: 60';
-        }
-        else (servantRarity == 'UC') {
-            servantLevel = 'Level: 65';
-        }
-    }
-    else if (servantRarity == 'R') {
-        rarityColor = colorSilver;
-        npLevel = 'NP5';
-        if (verifyGrailedServant(servantID)) {
-            levelPrompt = prompt("Insert Servant Level.");
-            servantLevel = 'Level: ' + levelPrompt;
-        }
-        else {
-            servantLevel = 'Level: 70';
-        }
-    }
-    else {
-        rarityColor = colorGold;
-        npPrompt = prompt("Insert NP Level.");
-        npLevel = 'NP' + npPrompt;
-
-        if (verifyGrailedServant(servantID)) {
-            levelPrompt = prompt("Insert Servant Level.");
-            servantLevel = 'Level: ' + levelPrompt;
-        }
-        else if (servantRarity == 'SR') {
-            servantLevel = 'Level: 80';
-        }
-        else if (servantRarity == 'SSR') {
-            servantLevel = 'Level: 90';
-        }
-    }
+    var npLevel;
+    setAssets(servantRarity);
     editable.getByName("Rarity").textItem.color = rarityColor;
     editable.getByName("NP Level").textItem.contents = npLevel;
     editable.getByName("Servant Level").textItem.contents = servantLevel;
@@ -507,8 +503,8 @@ if(file[0]){
     editable.getByName("Rarity").textItem.contents = servantRarity;
     editable.getByName("ID").textItem.contents = servantID;
     if (documents.length > 0) {
-    var fileName = servantID + "-" + servantName;
-    saveJPEG(fileName);
+        var fileName = servantID + "-" + servantName;
+        saveJPEG(fileName);
     }
 }
 
@@ -543,4 +539,33 @@ function verifyGrailedServant(id) {
         }
     }
     return flag;
+}
+function setAssets(rarity) {
+    var index = matchRarity(rarity);
+    var svtDefinedStats = svtStats[index];
+    rarityColor = svtDefinedStats.color;
+    if (verifyGrailedServant(servantID)) {
+        servantLevel = 'Level: ' + prompt("Insert Servant Level.");
+    }
+    else {
+        servantLevel = svtDefinedStats.level;
+    }
+    if (index > 2) {
+        npLevel = 'NP' + prompt("Insert NP Level.");
+    }
+    else {
+        npLevel = svtDefinedStats.np;
+    }
+}
+function matchRarity(rarity) {
+    var raritiesArray = svtStats[5].rarities;
+    var i = 0;
+    while(true) {
+        if(rarity == raritiesArray[i]) {
+            return i;
+        }
+        else {
+            i++;
+        }
+    }
 }
